@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@yield('title')</title>
+    <title></title>
     
     <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -20,12 +20,11 @@
     </script>
 </head>
 <body class="flex flex-col min-h-screen dark:bg-gray-900">
-
-    @include('layouts.navigation')
+    <x-navigation-layout></x-navigation-layout>
 
     <!-- Konten Utama -->
-    <main class="flex-grow">
-        @yield('content')
+    <main class="flex-1">
+        {{ $slot }}
     </main>
 
     <!-- Footer -->
@@ -45,6 +44,6 @@
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
-    @stack('scripts')
+
 </body>
 </html>

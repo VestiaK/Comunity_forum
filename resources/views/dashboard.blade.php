@@ -1,9 +1,4 @@
-
-@extends('layouts.app')
-
-@section('title', 'Home Page')
-
-@section('content')
+<x-app-layout>
     <!-- Hero Section -->
     <section class="bg-center bg-no-repeat bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] bg-gray-700 bg-blend-multiply">
         <div class="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-56">
@@ -137,7 +132,6 @@
             </div>
         </div>
     </div>
-@endsection
 
 @push('scripts')
     <!-- Dark Mode Toggle Script -->
@@ -184,3 +178,5 @@ themeToggleBtn.addEventListener('click', function() {
 });
     </script>
 @endpush
+
+</x-app-layout>
