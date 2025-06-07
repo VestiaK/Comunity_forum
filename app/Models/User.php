@@ -21,9 +21,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'username',
         'email',
         'password',
+        'reputation_points', // tambahkan ini
     ];
 
     /**
@@ -51,5 +51,24 @@ class User extends Authenticatable
         public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    // Tambahkan relasi komentar milik user ini
+    public function comments(): HasMany
+    {
+        return $this->hasMany(\App\Models\Comment::class);
+    }
+
+    // Relasi ke komentar yang sudah divote user ini
+    public function votedComments()
+    {
+        return $this->belongsToMany(\App\Models\Comment::class, 'comment_votes')
+            ->withPivot('type')
+            ->withTimestamps();
+    }
+
+    public function hasVotedOnComment($commentId)
+    {
+        return $this->votedComments()->where('comment_id', $commentId)->exists();
     }
 }

@@ -17,12 +17,14 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
+        $categoryIds = \App\Models\Category::pluck('id')->toArray();
+        $userIds = \App\Models\User::pluck('id')->toArray();
         return [
-            'name' => fake()->sentence(3, false),
-            'slug' => fake()->unique()->slug(),
-            'user_id' => User::factory(),
-            'category_id' => Category::factory(),
-            'body' => fake()->text(),
+            'name' => $this->faker->sentence(3, false),
+            'slug' => $this->faker->unique()->slug(),
+            'user_id' => $userIds ? $this->faker->randomElement($userIds) : \App\Models\User::factory(),
+            'category_id' => $categoryIds ? $this->faker->randomElement($categoryIds) : \App\Models\Category::factory(),
+            'body' => $this->faker->text(),
         ];
     }
 }

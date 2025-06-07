@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\post;
+use App\Models\Comment;
+use Database\Seeders\CommentSeeder;
 use Database\Seeders\CategorySeeder;
 
 
@@ -19,13 +21,29 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $this->call([
-            CategorySeeder::class,
+        Category::create([
+            'name' => 'Laravel',
+            'slug' => 'laravel',
+            'color' => 'red',
+            'description' => 'Laravel adalah framework PHP yang digunakan untuk membangun aplikasi web.',
+        ]);
+        Category::create([
+            'name' => 'Web Programming',
+            'slug' => 'Web-Programming',
+            'color' => 'blue',
+            'description' => 'Web Programming adalah proses pengembangan aplikasi web.',
+        ]);
+
+        Category::create([
+            'name' => 'Mobile Programming',
+            'slug' => 'Mobile-Programming',
+            'color' => 'green',
+            'description' => 'Mobile Programming adalah proses pengembangan aplikasi mobile.',
         ]);
         post::factory(100)->recycle([
-            Category::all(),
-            User::factory(5)->create(),
             
+            User::factory(5)->create(),
+            Comment::factory(10)->create(),
         ])->create();
     }
 }
