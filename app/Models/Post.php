@@ -9,9 +9,11 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Comment;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Post extends Model
 {
+    use HasFactory;
     protected $fillable = [
     'name',
     'slug',
@@ -21,14 +23,17 @@ class Post extends Model
     ];
     protected $with = ['asker', 'category'];
 
+    // Relasi ke user yang membuat post (asker)
     public function asker(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    // Relasi ke kategori post
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+    // Relasi ke komentar yang dimiliki post ini
     public function comments()
     {
         return $this->hasMany(Comment::class);

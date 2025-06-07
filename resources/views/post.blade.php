@@ -107,20 +107,20 @@
                 <div class="flex items-center mt-4 space-x-4">
                     <div class="flex items-center">
                         <button type="button"
-                            class="vote-button inline-flex items-center p-2 text-sm font-medium text-gray-500 bg-white rounded-lg hover:bg-gray-100 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700 {{ auth()->user()->hasVotedOnComment($comment->id) ? 'cursor-not-allowed opacity-50' : '' }}"
+                            class="vote-button inline-flex items-center p-2 text-sm font-medium text-gray-500 bg-white rounded-lg hover:bg-gray-100 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700 {{ auth()->user()->hasVotedOnComment($comment->id) === 'upvote' ? 'cursor-not-allowed opacity-50' : '' }}"
                             data-comment-id="{{ $comment->id }}"
                             data-vote-type="upvote"
-                            {{ auth()->user()->hasVotedOnComment($comment->id) ? 'disabled' : '' }}>
+                            {{ auth()->user()->hasVotedOnComment($comment->id) === 'upvote' ? 'disabled' : '' }}>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                             </svg>
                             <span class="ml-1">+10</span>
                         </button>
                         <button type="button"
-                            class="vote-button inline-flex items-center p-2 text-sm font-medium text-gray-500 bg-white rounded-lg hover:bg-gray-100 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700 {{ auth()->user()->hasVotedOnComment($comment->id) ? 'cursor-not-allowed opacity-50' : '' }}"
+                            class="vote-button inline-flex items-center p-2 text-sm font-medium text-gray-500 bg-white rounded-lg hover:bg-gray-100 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-900 dark:hover:bg-gray-700 {{ auth()->user()->hasVotedOnComment($comment->id) === 'downvote' ? 'cursor-not-allowed opacity-50' : '' }}"
                             data-comment-id="{{ $comment->id }}"
                             data-vote-type="downvote"
-                            {{ auth()->user()->hasVotedOnComment($comment->id) ? 'disabled' : '' }}>
+                            {{ auth()->user()->hasVotedOnComment($comment->id) === 'downvote' ? 'disabled' : '' }}>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -244,52 +244,37 @@
         });
 
         // Voting functionality
-        document.querySelectorAll('.vote-button').forEach(button => {
-            button.addEventListener('click', function() {
-                console.log('Vote button clicked'); // Debug
-                const commentId = this.dataset.commentId;
-                const voteType = this.dataset.voteType;
-                const token = document.querySelector('meta[name="csrf-token"]').content;
+document.querySelectorAll('.vote-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const commentId = this.dataset.commentId;
+        const voteType = this.dataset.voteType;
+        const token = document.querySelector('meta[name="csrf-token"]').content;
 
-                fetch(`/comments/${commentId}/vote`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': token,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ type: voteType })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Vote response:', data); // Debug
-                    if (data.success) {
-                        // Update reputation points display
-                        const pointsDisplay = this.closest('article').querySelector('.reputation-points span');
-                        pointsDisplay.textContent = data.reputation_points;
-                        
-                        // Disable vote buttons
-                        this.closest('article').querySelectorAll('.vote-button').forEach(btn => {
-                            btn.disabled = true;
-                            btn.classList.add('cursor-not-allowed', 'opacity-50');
-                        });
-                        
-                        alert(data.message);
-                    } else {
-                        alert(data.message || 'Error voting');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error voting on comment');
-                });
-            });
+        fetch(`/comments/${commentId}/vote`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ type: voteType })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update reputation points display
+                const pointsDisplay = this.closest('article').querySelector('.reputation-points span');
+                pointsDisplay.textContent = data.reputation_points;
+                alert(data.message);
+            } else {
+                alert(data.message || 'Error voting');
+            }
+        })
+        .catch(error => {
+            alert('Error voting on comment');
         });
+    });
+});
     });
     </script>
 </x-app-layout>

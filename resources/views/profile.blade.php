@@ -11,7 +11,7 @@
                 </div>
                 <div>
                     <x-input-label for="username" value="Username" />
-                    <x-input-text id="username" name="username" value="{{ old('username', auth()->user()->username) }}" required />
+                    <x-input-text  id="username" name="username" value="{{ old('username', auth()->user()->username) }}" required />
                     <x-input-error :messages="$errors->get('username')" />
                 </div>
                 <div class="md:col-span-2">
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="flex justify-end mt-6">
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">Simpan Perubahan</button>
+                <button type="submit" class="px-6 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition">Simpan Perubahan</button>
             </div>
         </form>
         <div class="mb-8">
@@ -62,7 +62,7 @@
                         <a href="{{ route('posts.show', $post) }}" class="text-primary-700 dark:text-white font-semibold hover:underline">{{ $post->name }}</a>
                         <span class="block text-sm text-gray-500 dark:text-gray-400">{{ $post->created_at->diffForHumans() }}</span>
                     </div>
-                    <a href="{{ route('posts.show', $post) }}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">Lihat Diskusi</a>
+                    <a href="{{ route('posts.show', $post) }}" class="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700">Lihat Diskusi</a>
                 </li>
                 @empty
                 <li class="py-3 text-gray-500 dark:text-gray-400">Belum ada diskusi.</li>

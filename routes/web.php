@@ -14,26 +14,29 @@ use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 
 Route::get('/', function () {
-    return view('welcome');
+    $categories = Category::all();
+    return view('welcome', compact('categories'));
 });
 
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    $categories = Category::all();
+    return view('dashboard', compact('categories'));
+})->name('dashboard');
 
-Route::resource('posts', PostController::class)->middleware('auth');
-
+Route::resource('posts', PostController::class);
+Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 Route::get('/profile', function ()
 {
-    return view('profile', ['title' => 'Profile']);
+    $categories = Category::all();
+    return view('profile', ['title' => 'Profile', 'categories' => $categories]);
 });
 Route::get('/reputation', function ()
 {
-    return view('reputation', ['title' => 'Reputation']);
+    $categories = Category::all();
+    return view('reputation', ['title' => 'Reputation', 'categories' => $categories]);
 });
 
-Route::get('/posts', [PostController::class, 'index']);
 
 // Comment routes
 Route::middleware(['auth'])->group(function () {

@@ -5,8 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Post;
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<Post>
  */
 class PostFactory extends Factory
 {
@@ -17,13 +18,13 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
-        $categoryIds = \App\Models\Category::pluck('id')->toArray();
-        $userIds = \App\Models\User::pluck('id')->toArray();
+        $categoryIds = Category::pluck('id')->toArray();
+        $userIds = User::pluck('id')->toArray();
         return [
             'name' => $this->faker->sentence(3, false),
             'slug' => $this->faker->unique()->slug(),
-            'user_id' => $userIds ? $this->faker->randomElement($userIds) : \App\Models\User::factory(),
-            'category_id' => $categoryIds ? $this->faker->randomElement($categoryIds) : \App\Models\Category::factory(),
+            'user_id' => $userIds ? $this->faker->randomElement($userIds) : User::factory(),
+            'category_id' => $categoryIds ? $this->faker->randomElement($categoryIds) : Category::factory(),
             'body' => $this->faker->text(),
         ];
     }
