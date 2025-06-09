@@ -8,32 +8,34 @@ use App\Models\Category;
 use app\Models\User;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ModeratorController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdatePasswordRequest;
+use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
-    $categories = Category::all();
+    $categories = Category::paginate(20);
     return view('welcome', compact('categories'));
 });
 
 
-Route::get('/dashboard', function () {
-    $categories = Category::all();
-    return view('dashboard', compact('categories'));
-})->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
 Route::resource('posts', PostController::class);
 Route::get('/posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+
 Route::get('/profile', function ()
 {
-    $categories = Category::all();
+    $categories = Category::paginate(20);
     return view('profile', ['title' => 'Profile', 'categories' => $categories]);
 });
 Route::get('/reputation', function ()
 {
-    $categories = Category::all();
+    $categories = Category::paginate(20);
     return view('reputation', ['title' => 'Reputation', 'categories' => $categories]);
 });
 
@@ -45,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::match(['put', 'post'], '/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('/comments/{comment}/vote', [CommentController::class, 'vote']);
+    Route::post('/report/{type}/{id}', [ReportController::class, 'store']);
 });
 
 Route::get('/asker/{user:username}', function(User $user){
@@ -65,5 +68,41 @@ Route::middleware('auth')->group(function () {
         return back()->with('success', 'Password berhasil diubah!');
     })->name('profile.password');
 });   
+
+Route::middleware(['auth', 'can:moderate'])->prefix('moderator')->group(function () {
+    Route::get('/reports', [ModeratorController::class, 'reports'])->name('moderator.reports');
+    Route::delete('/report/{id}', [ModeratorController::class, 'deleteReport'])->name('moderator.deleteReport');
+    Route::delete('/content/{type}/{id}', [ModeratorController::class, 'deleteContent'])->name('moderator.deleteContent');
+    Route::post('/content/{type}/{id}/edit', [ModeratorController::class, 'editContent'])->name('moderator.editContent');
+    Route::post('/close-post/{post}', [ModeratorController::class, 'closePost'])->name('moderator.closePost');
+    Route::delete('/delete-comment/{comment}', [ModeratorController::class, 'deleteComment'])->name('moderator.deleteComment');
+    Route::delete('/delete-post/{post}', [ModeratorController::class, 'deletePost'])->name('moderator.deletePost');
+});
+
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    
+    // Hapus user
+    Route::delete('/user/{user}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+    // Hapus kategori
+    Route::delete('/category/{category}', [AdminController::class, 'deleteCategory'])->name('admin.deleteCategory');
+    // Halaman manajemen user
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    // Halaman manajemen post
+    Route::get('/posts', [AdminController::class, 'posts'])->name('admin.posts');
+    // Halaman manajemen kategori
+    Route::get('/categories', [AdminController::class, 'categories'])->name('admin.categories');
+    // Hapus post
+    Route::delete('/post/{post}', [AdminController::class, 'deletePost'])->name('admin.deletePost');
+    // Halaman manajemen komentar
+    Route::get('/comments', [AdminController::class, 'comments'])->name('admin.comments');
+    // Hapus komentar
+    Route::delete('/comment/{comment}', [AdminController::class, 'deleteComment'])->name('admin.deleteComment');
+    // Edit post (AJAX/modal)
+    Route::get('/posts/{post}/edit', [AdminController::class, 'editPost'])->name('admin.editPost');
+    Route::post('/posts/{post}/edit', [AdminController::class, 'editPost']);
+    Route::get('/comments/{comment}/edit', [AdminController::class, 'editComment'])->name('admin.editComment');
+    Route::post('/comments/{comment}/edit', [AdminController::class, 'editComment']);
+    
+});
 
 require __DIR__.'/auth.php';

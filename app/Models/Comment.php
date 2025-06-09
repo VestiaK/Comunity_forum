@@ -31,4 +31,14 @@ class Comment extends Model
     {
         return $this->hasMany(self::class, 'parent_id');
     }
+
+    public function reports()
+    {
+        return $this->morphMany(\App\Models\Report::class, 'reportable');
+    }
+
+    public function post()
+    {
+        return $this->belongsTo(\App\Models\Post::class);
+    }
 }

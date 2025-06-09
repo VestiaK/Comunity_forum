@@ -8,6 +8,7 @@ use App\View\Components\Layout;
 use App\View\Components\Navbar;
 use Illuminate\Support\Facades\View;
 use App\Models\Category;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,16 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
             $view->with('categories', Category::all());
-    });
+        });
+
+        Gate::define('moderate', function ($user) {
+            return $user->isModerator();
+        });
+
+        Gate::before(function ($user, $ability) {
+            if ($user->role === 'admin') {
+                return true;
+            }
+        });
     }
 }

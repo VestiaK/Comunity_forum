@@ -25,6 +25,7 @@ class User extends Authenticatable
         'username',
         'password',
         'reputation_points', // tambahkan ini
+        'role', // tambahkan kolom role
     ];
 
     /**
@@ -71,5 +72,13 @@ class User extends Authenticatable
     public function hasVotedOnComment($commentId)
     {
         return $this->votedComments()->where('comment_id', $commentId)->exists();
+    }
+    public function isModerator()
+    {
+        return $this->role === 'moderator';
+    }
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 }

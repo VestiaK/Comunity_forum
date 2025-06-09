@@ -20,7 +20,7 @@ class CommentFactory extends Factory
     {
         return [
             'body' => fake()->text(),
-            'user_id' => User::factory(),
+            'user_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
             'post_id' => Post::factory(),
         ];
     }

@@ -13,23 +13,26 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::create([
-            'name' => 'Laravel',
+        Category::updateOrCreate([
             'slug' => 'laravel',
+        ], [
+            'name' => 'Laravel',
             'color' => 'red',
             'description' => 'Laravel adalah framework PHP yang digunakan untuk membangun aplikasi web.',
         ]);
 
-        Category::create([
-            'name' => 'Web Programming',
+        Category::updateOrCreate([
             'slug' => 'Web-Programming',
+        ], [
+            'name' => 'Web Programming',
             'color' => 'blue',
             'description' => 'Web Programming adalah proses pengembangan aplikasi web.',
         ]);
 
-        Category::create([
-            'name' => 'Mobile Programming',
+        Category::updateOrCreate([
             'slug' => 'Mobile-Programming',
+        ], [
+            'name' => 'Mobile Programming',
             'color' => 'green',
             'description' => 'Mobile Programming adalah proses pengembangan aplikasi mobile.',
         ]);

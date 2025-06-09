@@ -5,30 +5,31 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const darkIcon = document.getElementById('theme-toggle-dark-icon');
-    const lightIcon = document.getElementById('theme-toggle-light-icon');
-
-    // Set icon on load
-    if (localStorage.getItem('color-theme') === 'dark' ||
-        (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-        lightIcon.classList.remove('hidden');
-    } else {
-        document.documentElement.classList.remove('dark');
-        darkIcon.classList.remove('hidden');
-    }
-
-    themeToggleBtn.addEventListener('click', function() {
-        darkIcon.classList.toggle('hidden');
-        lightIcon.classList.toggle('hidden');
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
+    document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+        const darkIcon = btn.querySelector('.theme-toggle-dark-icon');
+        const lightIcon = btn.querySelector('.theme-toggle-light-icon');
+        // Set icon on load
+        if (localStorage.getItem('color-theme') === 'dark' ||
+            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
+            lightIcon.classList.remove('hidden');
+            darkIcon.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            darkIcon.classList.remove('hidden');
+            lightIcon.classList.add('hidden');
         }
+        btn.addEventListener('click', function() {
+            darkIcon.classList.toggle('hidden');
+            lightIcon.classList.toggle('hidden');
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
     });
 });
 </script>
@@ -51,29 +52,45 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="sr-only">Open user menu</span>
         <img class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=3b82f6&color=fff" alt="user photo">
       </button>
+      <button class="theme-toggle-btn p-2 rounded focus:outline-none text-gray-700 dark:text-gray-200 mr-2">
+    <svg class="theme-toggle-light-icon w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>
+    </svg>
+    <svg class="theme-toggle-dark-icon w-6 h-6 text-gray-800 dark:text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 0 1-.5-17.986V3c-.354.966-.5 1.911-.5 3a9 9 0 0 0 9 9c.239 0 .254.018.488 0A9.004 9.004 0 0 1 12 21Z"/>
+    </svg>
+</button>
       <div id="dropdownAvatar" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
         <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
           <div>{{auth()->user()->name}}</div>
           <div class="font-medium truncate">{{auth()->user()->email}}</div>
         </div>
         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownUserAvatarButton">
+
           <li><a href="/profile" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Profile</a></li>
           <li><a href="/reputation" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reputasi</a></li>
           <!-- Tombol Toggle Dark Mode -->
 
-<div class="flex justify-center">
-    <button id="theme-toggle" type="button" class="p-2 rounded focus:outline-none text-gray-700 dark:text-gray-200">
 
-        <svg id="theme-toggle-light-icon" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>
-        </svg>
 
-        <svg id="theme-toggle-dark-icon" class="w-6 h-6 text-gray-800 dark:text-white hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 0 1-.5-17.986V3c-.354.966-.5 1.911-.5 3a9 9 0 0 0 9 9c.239 0 .254.018.488 0A9.004 9.004 0 0 1 12 21Z"/>
-      </svg>    
-    </button>
-</div>
-
+          <li>
+            @if(auth()->check() && (auth()->user()->isModerator() || auth()->user()->isAdmin()))
+              <a href="/moderator/reports" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-orange-600 font-semibold">Panel Laporan</a>
+            @endif
+          </li>
+          @if(auth()->check() && auth()->user()->isAdmin())
+          <li>
+            <a href="/admin/users" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-red-600 font-semibold">Manajemen User</a>
+          </li>
+          <li>
+            <a href="/admin/posts" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-red-600 font-semibold">Manajemen Post</a>
+          </li>
+          <li>
+            <a href="/admin/categories" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-red-600 font-semibold">Manajemen Kategori</a>
+          </li>
+          <li>
+            <a href="/admin/comments" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-red-600 font-semibold">Manajemen Komentar</a>
+          @endif
         </ul>
         <form class="py-2" action="/logout" method="POST">
           @csrf
@@ -93,29 +110,31 @@ document.addEventListener('DOMContentLoaded', function() {
       </button>
     </div>
     <!-- Navigasi -->
-    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
+    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 pl-20 " id="navbar-search">
       <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-        <li>
-          <a href="/dashboard" class="block py-2 px-3 {{ request()->is('/dashboard') ? 'text-purple-700' : 'text-gray-900 dark:text-white'  }} rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0 md:dark:hover:text-purple-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent" aria-current="page">Home</a>
-        </li>
-        <li>
-          <a href="/posts" class="block py-2 px-3 {{ request()->is('posts') ? 'text-purple-700' : 'text-gray-900 dark:text-white' }} rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0 md:dark:hover:text-purple-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Diskusi</a>
-        </li>
-        <li class="relative group">
-          <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown-kategori" type="button"
-            class="flex items-center py-2 px-3 text-gray-900 dark:text-white rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 md:hover:bg-transparent md:p-0 md:dark:hover:text-purple-400 transition-colors">
+      <li>
+        <a href="/dashboard" class="block py-2 px-3 {{ request()->is('/dashboard') ? 'text-purple-700' : 'text-gray-900 dark:text-white'  }} rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0 md:dark:hover:text-purple-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent" aria-current="page">Home</a>
+      </li>
+      <li>
+        <a href="/posts" class="block py-2 px-3 {{ request()->is('posts') ? 'text-purple-700' : 'text-gray-900 dark:text-white' }} rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-700 md:p-0 md:dark:hover:text-purple-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Diskusi</a>
+      </li>
+      <li class="relative group">
+        <button id="mega-menu-dropdown-button" data-dropdown-toggle="mega-menu-dropdown" type="button"
+        class="flex items-center py-2 px-3 text-gray-900 dark:text-white rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 md:hover:bg-transparent md:p-0 md:dark:hover:text-purple-400 transition-colors">
             Kategori
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-          <div id="dropdown-kategori" class="hidden absolute left-0 z-20 bg-white dark:bg-gray-800 rounded shadow-lg mt-2 min-w-[180px] border border-gray-100 dark:border-gray-700">
-            @foreach($categories as $cat)
-              <a href="/posts?category={{ $cat->slug }}"
-                class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-purple-100 dark:hover:bg-purple-700 transition-colors">
-                {{ $cat->name }}
-              </a>
-            @endforeach
-          </div>
-        </li>
+        </button>
+        <div id="mega-menu-dropdown" class="hidden absolute z-10 w-56 text-sm bg-white border border-gray-100 rounded-lg shadow-md dark:border-gray-700 dark:bg-gray-800">
+            <div class="p-2">
+                @foreach($categories as $cat)
+                    <a href="/posts?category={{ $cat->slug }}"
+                    class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-purple-100 dark:hover:bg-purple-700 rounded transition-colors">
+                        {{ $cat->name }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+      </li>
       </ul>
     </div>
   </div>

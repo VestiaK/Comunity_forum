@@ -22,6 +22,9 @@ class Post extends Model
     'user_id'
     ];
     protected $with = ['asker', 'category'];
+    protected $casts = [
+        'closed' => 'boolean',
+    ];
 
     // Relasi ke user yang membuat post (asker)
     public function asker(): BelongsTo
@@ -37,5 +40,13 @@ class Post extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+    public function reports()
+    {
+        return $this->morphMany(\App\Models\Report::class, 'reportable');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
